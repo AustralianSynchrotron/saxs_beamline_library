@@ -19,8 +19,8 @@ from saxs_beamline_library.beamline_kafka.bluesky_producer import BlueskyKafkaPr
 from .saxs_acquire_seq import AcquireSeq
 from saxs_beamline_library.devices.saxs_detectors import saxs_detector
 from saxs_beamline_library.utils.utils import (
-    InvalidComponent,
-    get_component,
+    InvalidDevice,
+    get_device,
     put_if_different,
 )
 
@@ -105,12 +105,12 @@ class SAXSAcquire:
             def append_components(component_list: List[str], appender: Callable[[str], None]) -> None:
                 for cpt in component_list:
                     try:
-                        component = get_component(cpt)
+                        component = get_device(cpt)
                         appender(component)
                     except TimeoutError:
                         logger.warning(f"Timeout Connecting Component {cpt}")
                         continue
-                    except InvalidComponent as e:
+                    except InvalidDevice as e:
                         logger.warning(str(e))
 
             append_components(configdata["log"]["monitors"], self._sd.monitors.append)
